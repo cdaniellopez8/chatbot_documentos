@@ -2,8 +2,8 @@ import streamlit as st
 import openai
 import PyPDF2
 
-# Cargar la API key desde secrets
-openai.api_key = st.secrets["openai"]["api_key"]
+# Configuración de la API
+client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
 st.set_page_config(page_title="Chatbot de Documentos", page_icon="🤖")
 
@@ -39,7 +39,7 @@ if prompt := st.chat_input("Haz una pregunta sobre el documento..."):
     st.session_state["messages"].append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
 
-    # Llamada a OpenAI con el texto del documento como contexto
+    # Crear contexto
     context_prompt = f"""
     Aquí está el contenido del documento:
 
@@ -49,8 +49,8 @@ if prompt := st.chat_input("Haz una pregunta sobre el documento..."):
     {prompt}
     """
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4o-mini",  # más barato/rápido
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "Eres un experto en logística y análisis de delivery orders."},
             {"role": "user", "content": context_prompt}
@@ -59,9 +59,10 @@ if prompt := st.chat_input("Haz una pregunta sobre el documento..."):
         temperature=0.3,
     )
 
-    reply = response["choices"][0]["message"]["content"]
+    reply = response.choices[0].message.content
     st.session_state["messages"].append({"role": "assistant", "content": reply})
     st.chat_message("assistant").write(reply)
+
 
 
 
