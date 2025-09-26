@@ -1,13 +1,13 @@
+from openai import OpenAI
 import streamlit as st
-import openai
 import PyPDF2
 
 # Configuración de la API
 client = OpenAI(api_key=st.secrets["openai"]["api_key"])
 
-st.set_page_config(page_title="Chatbot de Documentos", page_icon="🤖")
+st.set_page_config(page_title="Chatbot de Documentos", page_icon="📄", layout="wide")
 
-st.title("🤖 Chatbot para Delivery Orders")
+st.title("📄 Chatbot de Delivery Orders")
 st.write("Sube un documento (PDF) y haz preguntas sobre su contenido.")
 
 # --- Subir documento ---
@@ -62,6 +62,7 @@ if prompt := st.chat_input("Haz una pregunta sobre el documento..."):
     reply = response.choices[0].message.content
     st.session_state["messages"].append({"role": "assistant", "content": reply})
     st.chat_message("assistant").write(reply)
+
 
 
 
