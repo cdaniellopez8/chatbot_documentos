@@ -45,14 +45,14 @@ if prompt := st.chat_input("Haz una pregunta sobre el documento..."):
 
     {document_text}
 
-    Ahora responde la siguiente pregunta del usuario de forma concisa y clara:
+    Ahora responde la siguiente pregunta del usuario de forma concisa y clara, recuerda se amable:
     {prompt}
     """
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Eres un experto en logística y análisis de delivery orders."},
+            {"role": "system", "content": "Eres un experto en logística y análisis de delivery orders, pero puedes recibir cualquier tipo de documento como facturas y demas, se amable, contesta lo que sepas y si te preguntan como estas? responde amablemente y di que bien."},
             {"role": "user", "content": context_prompt}
         ],
         max_tokens=500,
@@ -62,6 +62,7 @@ if prompt := st.chat_input("Haz una pregunta sobre el documento..."):
     reply = response.choices[0].message.content
     st.session_state["messages"].append({"role": "assistant", "content": reply})
     st.chat_message("assistant").write(reply)
+
 
 
 
